@@ -21,7 +21,45 @@ namespace DSPAlgorithms.Algorithms
 
         public override void Run()
         {
-            throw new NotImplementedException();
+            OutputEncodedSignal = new List<string>();
+            OutputSamplesError = new List<float>();
+            OutputIntervalIndices = new List<int>();
+            OutputQuantizedSignal = new Signal(new List<float>(), false);
+            if (InputLevel == 0)
+                InputLevel = (int)Math.Pow(2, InputNumBits);
+
+            if (InputNumBits == 0)
+                InputNumBits = (int)Math.Log(InputLevel,2);
+
+            float delta = (InputSignal.Samples.Max() - InputSignal.Samples.Min()) / InputLevel;
+
+            List<float> midpoints = new List<float>(InputLevel);
+            for (int i = 0; i < InputLevel; i++)
+                midpoints.Add
+                    ((InputSignal.Samples.Min() + delta * i + InputSignal.Samples.Min() + delta * (i + 1)) / 2);
+
+            for (int i = 0; i < InputSignal.Samples.Count; i++)
+            {
+                if (InputSignal.Samples[i] == InputSignal.Samples.Max())
+                    OutputQuantizedSignal.Samples.Add(midpoints[midpoints.Count - 1]);
+                else
+                    OutputQuantizedSignal.Samples.Add
+                        (midpoints[(int)((InputSignal.Samples[i] - InputSignal.Samples.Min()) / delta)]);
+
+                OutputIntervalIndices.Add
+                    ((int)((InputSignal.Samples[i] - InputSignal.Samples.Min()) / delta) + 1);
+
+                OutputEncodedSignal.Add
+                    (Convert.ToString((int)((InputSignal.Samples[i] - InputSignal.Samples.Min()) / delta), 2));
+
+                if (OutputEncodedSignal[i].Length != InputNumBits)
+                    for (int j = OutputEncodedSignal[i].Length; j < InputNumBits; j++)
+                        OutputEncodedSignal[i] = "0" + OutputEncodedSignal[i];
+            }
+
+            for (int i = 0; i < InputSignal.Samples.Count; i++)
+                OutputSamplesError.Add((float)Math.Round(InputSignal.Samples[i] - OutputQuantizedSignal.Samples[i], 2));
+
         }
     }
 }
