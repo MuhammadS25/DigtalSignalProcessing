@@ -52,11 +52,8 @@ namespace DSPAlgorithms.Algorithms
                 if (OutputIntervalIndices[i] > InputLevel) OutputIntervalIndices[i]--;
 
                 OutputEncodedSignal.Add
-                    (Convert.ToString((OutputIntervalIndices[i] - 1), 2));
+                    (Convert.ToString((OutputIntervalIndices[i] - 1), 2).PadLeft(InputNumBits, '0'));
 
-                if (OutputEncodedSignal[i].Length != InputNumBits)
-                    for (int j = OutputEncodedSignal[i].Length; j < InputNumBits; j++)
-                        OutputEncodedSignal[i] = "0" + OutputEncodedSignal[i];
             }
 
             for (int i = 0; i < InputSignal.Samples.Count; i++)
