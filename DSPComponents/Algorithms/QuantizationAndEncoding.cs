@@ -29,7 +29,7 @@ namespace DSPAlgorithms.Algorithms
                 InputLevel = (int)Math.Pow(2, InputNumBits);
 
             if (InputNumBits == 0)
-                InputNumBits = (int)Math.Log(InputLevel,2);
+                InputNumBits = (int)Math.Log(InputLevel, 2);
 
             float delta = (InputSignal.Samples.Max() - InputSignal.Samples.Min()) / InputLevel;
 
@@ -44,13 +44,15 @@ namespace DSPAlgorithms.Algorithms
                     OutputQuantizedSignal.Samples.Add(midpoints[midpoints.Count - 1]);
                 else
                     OutputQuantizedSignal.Samples.Add
-                        (midpoints[(int)((InputSignal.Samples[i] - InputSignal.Samples.Min()) / delta)]);
+                        ((float)Math.Round
+                        ((midpoints[(int)((InputSignal.Samples[i] - InputSignal.Samples.Min()) / delta)]), 3));
 
                 OutputIntervalIndices.Add
                     ((int)((InputSignal.Samples[i] - InputSignal.Samples.Min()) / delta) + 1);
+                if (OutputIntervalIndices[i] > InputLevel) OutputIntervalIndices[i]--;
 
                 OutputEncodedSignal.Add
-                    (Convert.ToString((int)((InputSignal.Samples[i] - InputSignal.Samples.Min()) / delta), 2));
+                    (Convert.ToString((OutputIntervalIndices[i] - 1), 2));
 
                 if (OutputEncodedSignal[i].Length != InputNumBits)
                     for (int j = OutputEncodedSignal[i].Length; j < InputNumBits; j++)
@@ -58,7 +60,8 @@ namespace DSPAlgorithms.Algorithms
             }
 
             for (int i = 0; i < InputSignal.Samples.Count; i++)
-                OutputSamplesError.Add((float)Math.Round(InputSignal.Samples[i] - OutputQuantizedSignal.Samples[i], 2));
+                OutputSamplesError.Add
+                    ((float)Math.Round(OutputQuantizedSignal.Samples[i] - InputSignal.Samples[i], 3));
 
         }
     }
