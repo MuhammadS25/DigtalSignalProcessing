@@ -18,23 +18,11 @@ namespace DSPAlgorithms.Algorithms
         {
             List<float> S = new List<float>();
 
-            float max = float.MinValue, min = float.MaxValue;
-            for (int i = 0; i < InputSignal.Samples.Count; i++)
-            {
-                if (InputSignal.Samples[i] > max)
-                {
-                    max = InputSignal.Samples[i];
-                }
-                if (InputSignal.Samples[i] < min)
-                {
-                    min = InputSignal.Samples[i];
-                }
-            }
-
             for (int i = 0; i < InputSignal.Samples.Count; i++)
             {
                 float normalizedSample =
-                    (InputSignal.Samples[i] - min) * (InputMaxRange - InputMinRange) / (max - min)
+                    (InputSignal.Samples[i] - InputSignal.Samples.Min()) * (InputMaxRange - InputMinRange)
+                    / (InputSignal.Samples.Max() - InputSignal.Samples.Min())
                     + InputMinRange;
                 S.Add(normalizedSample);
             }
