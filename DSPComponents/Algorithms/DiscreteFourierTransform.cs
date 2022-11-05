@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Numerics;
 using System.Threading.Tasks;
 using DSPAlgorithms.DataStructures;
 
@@ -13,9 +14,39 @@ namespace DSPAlgorithms.Algorithms
         public float InputSamplingFrequency { get; set; }
         public Signal OutputFreqDomainSignal { get; set; }
 
+        public List<Complex> ComputeHarmonics(Complex reverse)
+        {
+            List<Complex> harmonics = new List<Complex>(InputTimeDomainSignal.Samples.Count);
+            for (int k = 0; k < InputTimeDomainSignal.Samples.Count; ++k)
+            {
+                harmonics.Add(new Complex(0, 0));
+                for (int n = 0; n < InputTimeDomainSignal.Samples.Count; ++n)
+                {
+                    harmonics[k] +=
+                        InputTimeDomainSignal.Samples[n] *
+                        Complex.Pow(Math.E,
+                        reverse * k * 2 * Math.PI * n / InputTimeDomainSignal.Samples.Count);
+                }
+            }
+            return harmonics;
+        }
         public override void Run()
         {
-            throw new NotImplementedException();
+            OutputFreqDomainSignal = new Signal(new List<float>(), false);
+            OutputFreqDomainSignal.FrequenciesAmplitudes = new List<float>();
+            OutputFreqDomainSignal.FrequenciesPhaseShifts = new List<float>();
+
+            var harmonics = ComputeHarmonics(new Complex(0, -1));
+
+            for (int i = 0; i < harmonics.Count; ++i)
+            {
+                OutputFreqDomainSignal.FrequenciesAmplitudes.Add
+                    ((float)(Math.Sqrt(harmonics[i].Real * harmonics[i].Real + harmonics[i].Imaginary * harmonics[i].Imaginary)));
+
+                OutputFreqDomainSignal.FrequenciesPhaseShifts.Add
+                    ((float)(Math.Atan2(harmonics[i].Imaginary, harmonics[i].Real)));
+            }
+
         }
     }
 }
