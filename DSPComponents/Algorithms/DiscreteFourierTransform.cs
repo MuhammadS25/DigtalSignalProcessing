@@ -14,17 +14,17 @@ namespace DSPAlgorithms.Algorithms
         public float InputSamplingFrequency { get; set; }
         public Signal OutputFreqDomainSignal { get; set; }
 
-        public static List<Complex> ComputeHarmonics(Complex reverse, Signal S)
+        public static List<Complex> ComputeHarmonics(Complex reverse, List<Complex> S)
         {
-            List<Complex> harmonics = new List<Complex>(S.Samples.Count);
-            for (int k = 0; k < S.Samples.Count; ++k)
+            List<Complex> harmonics = new List<Complex>(S.Count);
+            for (int k = 0; k < S.Count; ++k)
             {
                 harmonics.Add(new Complex(0, 0));
-                for (int n = 0; n < S.Samples.Count; ++n)
+                for (int n = 0; n < S.Count; ++n)
                 {
                     harmonics[k] +=
-                        S.Samples[n] * Complex.Pow
-                        (Math.E, reverse * k * 2 * Math.PI * n / S.Samples.Count);
+                        S[n] * Complex.Pow
+                        (Math.E, reverse * k * 2 * Math.PI * n / S.Count);
                 }
             }
             return harmonics;
@@ -34,8 +34,12 @@ namespace DSPAlgorithms.Algorithms
             OutputFreqDomainSignal = new Signal(new List<float>(), false);
             OutputFreqDomainSignal.FrequenciesAmplitudes = new List<float>();
             OutputFreqDomainSignal.FrequenciesPhaseShifts = new List<float>();
+            List<Complex> S = new List<Complex>();
 
-            var harmonics = ComputeHarmonics(new Complex(0, -1), InputTimeDomainSignal);
+            for (int i = 0; i < InputTimeDomainSignal.Samples.Count; i++)
+                S.Add(new Complex(InputTimeDomainSignal.Samples[i], 0));
+
+            var harmonics = ComputeHarmonics(new Complex(0, -1), S);
 
             for (int i = 0; i < harmonics.Count; ++i)
             {
