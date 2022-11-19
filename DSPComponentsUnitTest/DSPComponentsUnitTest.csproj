@@ -67,7 +67,7 @@
     <Compile Include="NormalizerTestCases.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QuantizationAndEncodingTestCases.cs" />
-    <Compile Include="ShiftingAndFolding.cs" />
+    <Compile Include="ShiftingAndFoldingTestCases.cs" />
     <Compile Include="SinCosTestCases.cs" />
     <Compile Include="StudentTestCases.cs">
       <SubType>Code</SubType>
