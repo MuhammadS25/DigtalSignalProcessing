@@ -18,7 +18,30 @@ namespace DSPAlgorithms.Algorithms
         /// </summary>
         public override void Run()
         {
-            throw new NotImplementedException();
+            OutputConvolvedSignal = new Signal(new List<float>(), false);
+            OutputConvolvedSignal.SamplesIndices = new List<int>();
+            OutputConvolvedSignal.Samples = new List<float>();
+            int first = InputSignal1.SamplesIndices[0] + InputSignal2.SamplesIndices[0];
+            int last = InputSignal1.SamplesIndices.Max() + InputSignal2.SamplesIndices.Max();
+
+            for (int i = first; i <= last; i++)
+            {
+                float res = 0;
+                for (int k = first; k < InputSignal1.Samples.Count; k++)
+                {
+                    if ((i - k) >= InputSignal2.Samples.Count() || (i - k) < InputSignal2.SamplesIndices.Min() || (i - k) > InputSignal2.SamplesIndices.Max()
+                        || k < InputSignal1.SamplesIndices.Min() || k > InputSignal1.SamplesIndices.Max())
+                        continue;
+                    res += InputSignal1.Samples[InputSignal1.SamplesIndices.IndexOf(k)] *
+                        InputSignal2.Samples[InputSignal2.SamplesIndices.IndexOf(i - k)];
+
+                }
+                if (res == 0 && i == last) continue;
+                OutputConvolvedSignal.SamplesIndices.Add(i);
+                OutputConvolvedSignal.Samples.Add(res);
+            }
         }
+
     }
 }
+
