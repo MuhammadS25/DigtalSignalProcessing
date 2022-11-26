@@ -103,6 +103,33 @@ namespace DSPAlgorithms.Algorithms
                         InputSignal2.Samples.Add(Shifted);
                     }
                 }
+                else
+                {
+                    if (InputSignal1.Samples.Count != InputSignal2.Samples.Count)
+                    {
+                        for (int i = 0; i < InputSignal2.Samples.Count - 1; i++)
+                            InputSignal1.Samples.Add(0);
+                        for (int i = 0; i < InputSignal1.Samples.Count - 1; i++)
+                            InputSignal2.Samples.Add(0);
+                    }
+
+                    float norm1 = Normalization(InputSignal1);
+                    float norm2 = Normalization(InputSignal2);
+                    float norm = (float)1 / InputSignal1.Samples.Count * (float)Math.Sqrt(norm1 * norm2);
+
+                    int shifts = 0;
+                    for (int i = 0; i < InputSignal1.Samples.Count; i++)
+                    {
+                        float corr = 0;
+                        for (int j = 0; j < InputSignal1.Samples.Count - shifts; j++)
+                            corr += (InputSignal1.Samples[j] * InputSignal2.Samples[j + shifts]);
+
+                        corr /= InputSignal1.Samples.Count;
+                        OutputNonNormalizedCorrelation.Add(corr);
+                        OutputNormalizedCorrelation.Add(corr / norm);
+                        ++shifts;
+                    }
+                }
             }
         }
     }
