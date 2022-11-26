@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>DSPAlgorithms</RootNamespace>
     <AssemblyName>DSPComponents</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -81,6 +81,7 @@
     <Compile Include="Algorithms\Subtractor.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Algorithms\TimeDelay.cs" />
     <Compile Include="Algorithms\Utilities.cs">
       <SubType>Code</SubType>
     </Compile>

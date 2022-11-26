@@ -14,62 +14,62 @@ namespace DSPAlgorithms.Algorithms
         public List<float> OutputNonNormalizedCorrelation { get; set; }
         public List<float> OutputNormalizedCorrelation { get; set; }
 
+        public float Normalization(Signal S)
+        {
+            float res = 0;
+            for (int i = 0; i < S.Samples.Count; i++)
+                res += S.Samples[i] * S.Samples[i];
+
+            float Norm = (float)1 / S.Samples.Count * res; //sqrt of the squared value
+            return Norm;
+        }
         public override void Run()
         {
-            OutputNonNormalizedCorrelation = new List<float>();
             OutputNormalizedCorrelation = new List<float>();
+            OutputNonNormalizedCorrelation = new List<float>();
 
+            //Auto
             if (InputSignal2 == null)
             {
-                InputSignal2 = new Signal(InputSignal1.Samples, InputSignal1.Periodic);
-                double Sum1 = 0 , Sum2 = 0 , SumTot = 0;
 
-                for(int i=0; i<InputSignal1.Samples.Count; i++)
+                if (!InputSignal1.Periodic)
                 {
-                    Sum1 += Math.Pow(InputSignal1.Samples[i], 2);
+                    float norm = Normalization(InputSignal1);
+                    int shifts = 0;
+                    for (int i = 0; i < InputSignal1.Samples.Count; i++)
+                    {
+                        float corr = 0;
+                        for (int j = 0; j < InputSignal1.Samples.Count - shifts; j++)
+                            corr += (InputSignal1.Samples[j] * InputSignal1.Samples[j + shifts]);
+
+                        corr /= InputSignal1.Samples.Count;
+                        OutputNonNormalizedCorrelation.Add(corr);
+                        OutputNormalizedCorrelation.Add(corr / norm);
+                        ++shifts;
+                    }
                 }
-                Sum2 = Sum1;
-                SumTot = Sum1 * Sum2;
-                double NrmlFctr = (1 / ((1 / InputSignal1.Samples.Count) * Math.Sqrt(SumTot)));
-               
-                for(int i=0; i<InputSignal1.Samples.Count; i++)
+                else
                 {
-                    double nonNorm = 0 , Norm = 0;
-                    for(int j=0; j<InputSignal1.Samples.Count; j++)
+                    float norm = Normalization(InputSignal1);
+                    Signal input11 = new Signal(new List<float>(), new List<int>(), InputSignal1.Periodic);
+                    for (int i = 0; i < InputSignal1.Samples.Count; i++)
+                        input11.Samples.Add(InputSignal1.Samples[i]);
+                    for (int i = 0; i < InputSignal1.Samples.Count; i++)
                     {
-                        nonNorm += InputSignal1.Samples[j] * InputSignal2.Samples[j];
-                    }
-                    Norm = NrmlFctr * nonNorm;
-                    OutputNonNormalizedCorrelation[i] = (float)nonNorm;
-                    OutputNormalizedCorrelation[i] = (float)Norm;
-                    if (InputSignal2.Periodic)
-                    {
-                        float first = InputSignal2.Samples[0];
-                        InputSignal2.Samples.RemoveAt(0);
-                        InputSignal2.Samples.Add(first);
-                    }
-                    else
-                    {
-                        InputSignal2.Samples.RemoveAt(0);
-                        InputSignal2.Samples.Add(0);
+                        float corr = 0;
+                        for (int j = 0; j < InputSignal1.Samples.Count; j++)
+                            corr += (InputSignal1.Samples[j] * input11.Samples[j]);
+
+                        corr /= InputSignal1.Samples.Count;
+                        OutputNonNormalizedCorrelation.Add(corr);
+                        OutputNormalizedCorrelation.Add(corr / norm);
+                        //Shifting The Signal .......
+                        float Shifted = input11.Samples[0];
+                        input11.Samples.Remove(input11.Samples[0]);
+                        input11.Samples.Add(Shifted);
                     }
                 }
             }
-            else
-            {
-                double Sum1 = 0, Sum2 = 0, SumTot = 0;
-                for (int i = 0; i < InputSignal1.Samples.Count; i++)
-                {
-                    Sum1 += Math.Pow(InputSignal1.Samples[i], 2);
-                }
-                for (int i = 0; i < InputSignal2.Samples.Count; i++)
-                {
-                    Sum2 += Math.Pow(InputSignal2.Samples[i], 2);
-                }
-                SumTot = Sum1 * Sum2;
-                double NrmlFctr = (1 / ((1 / InputSignal1.Samples.Count) * Math.Sqrt(SumTot)));
-            }
-            throw new NotImplementedException();
         }
     }
 }
