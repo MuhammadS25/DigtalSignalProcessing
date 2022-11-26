@@ -16,6 +16,7 @@ namespace DSPAlgorithms.Algorithms
 
         public override void Run()
         {
+            //Correlation Calculation
             DirectCorrelation dircorr = new DirectCorrelation();
             dircorr.InputSignal1 = InputSignal1;
             dircorr.InputSignal2 = InputSignal2;
@@ -25,12 +26,15 @@ namespace DSPAlgorithms.Algorithms
             int lag = 0;
             for (int i = 0; i < dircorr.OutputNormalizedCorrelation.Count(); i++)
             {
+                //Finding Absolute Value
                 if (Math.Abs(dircorr.OutputNormalizedCorrelation[i]) > abs)
                 {
                     abs = Math.Abs(dircorr.OutputNormalizedCorrelation[i]);
+                    //Saving it's Lag(j)
                     lag = i;
                 }
             }
+            //Time Delay = Ts * j
             OutputTimeDelay = InputSamplingPeriod * lag;
 
         }
