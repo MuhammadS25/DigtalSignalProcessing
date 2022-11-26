@@ -7,7 +7,7 @@ using DSPAlgorithms.DataStructures;
 
 namespace DSPAlgorithms.Algorithms
 {
-    public class TimeDelay:Algorithm
+    public class TimeDelay : Algorithm
     {
         public Signal InputSignal1 { get; set; }
         public Signal InputSignal2 { get; set; }
@@ -16,7 +16,23 @@ namespace DSPAlgorithms.Algorithms
 
         public override void Run()
         {
-            throw new NotImplementedException();
+            DirectCorrelation dircorr = new DirectCorrelation();
+            dircorr.InputSignal1 = InputSignal1;
+            dircorr.InputSignal2 = InputSignal2;
+            dircorr.Run();
+
+            float abs = float.MinValue;
+            int lag = 0;
+            for (int i = 0; i < dircorr.OutputNormalizedCorrelation.Count(); i++)
+            {
+                if (Math.Abs(dircorr.OutputNormalizedCorrelation[i]) > abs)
+                {
+                    abs = Math.Abs(dircorr.OutputNormalizedCorrelation[i]);
+                    lag = i;
+                }
+            }
+            OutputTimeDelay = InputSamplingPeriod * lag;
+
         }
     }
 }
