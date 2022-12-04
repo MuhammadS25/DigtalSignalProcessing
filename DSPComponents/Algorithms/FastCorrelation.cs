@@ -64,6 +64,55 @@ namespace DSPAlgorithms.Algorithms
                     OutputNormalizedCorrelation.Add(idft.OutputTimeDomainSignal.Samples[i] / InputSignal1.Samples.Count / norm);
                 }
             }
+            else
+            {
+                if (InputSignal1.Samples.Count != InputSignal2.Samples.Count)
+                {
+                    for (int i = 0; i < InputSignal2.Samples.Count - 1; i++)
+                        InputSignal1.Samples.Add(0);
+                    for (int i = 0; i < InputSignal1.Samples.Count - 1; i++)
+                        InputSignal2.Samples.Add(0);
+                }
+
+                DiscreteFourierTransform d1 = new DiscreteFourierTransform();
+                d1.InputTimeDomainSignal = InputSignal2;
+                d1.Run();
+
+                List<Complex> S = new List<Complex>();
+                for (int i = 0; i < InputSignal1.Samples.Count; i++)
+                    S.Add(new Complex(InputSignal1.Samples[i], 0));
+
+                var harmonics = DiscreteFourierTransform.ComputeHarmonics(new Complex(0, -1), S);
+                for (int i = 0; i < harmonics.Count; i++)
+                    harmonics[i] = Complex.Conjugate(harmonics[i]);
+                List<float> amps = new List<float>();
+                List<float> phases = new List<float>();
+                for (int i = 0; i < harmonics.Count; ++i)
+                {
+                    amps.Add
+                        ((float)(Math.Sqrt(harmonics[i].Real * harmonics[i].Real + harmonics[i].Imaginary * harmonics[i].Imaginary)));
+                    amps[i] *= d1.OutputFreqDomainSignal.FrequenciesAmplitudes[i];
+
+                    phases.Add
+                        ((float)(Math.Atan2(harmonics[i].Imaginary, harmonics[i].Real)));
+                    phases[i] += d1.OutputFreqDomainSignal.FrequenciesPhaseShifts[i];
+                }
+
+                InverseDiscreteFourierTransform idft = new InverseDiscreteFourierTransform();
+                idft.InputFreqDomainSignal = new DSPAlgorithms.DataStructures.Signal
+                    (true, new List<float>(amps), amps, phases);
+                idft.Run();
+
+                float norm1 = Normalization(InputSignal1);
+                float norm2 = Normalization(InputSignal2);
+                float norm = (float)1 / InputSignal1.Samples.Count * (float)Math.Sqrt(norm1 * norm2);
+
+                for (int i = 0; i < idft.OutputTimeDomainSignal.Samples.Count; ++i)
+                {
+                    OutputNonNormalizedCorrelation.Add(idft.OutputTimeDomainSignal.Samples[i] / InputSignal1.Samples.Count);
+                    OutputNormalizedCorrelation.Add(idft.OutputTimeDomainSignal.Samples[i] / InputSignal1.Samples.Count / norm);
+                }
+            }
         }
     }
 }
