@@ -54,7 +54,8 @@
     <Compile Include="AccumlatorSumTestCases.cs" />
     <Compile Include="AdderTestCases.cs" />
     <Compile Include="ConvolutionTestCases.cs" />
-    <Compile Include="CorrelationTestCases .cs" />
+    <Compile Include="CorrelationTestCases.cs" />
+    <Compile Include="DCTTestcase.cs" />
     <Compile Include="DC_ComponentTestCases.cs" />
     <Compile Include="DerivativesTestCases.cs" />
     <Compile Include="DFTTestCases.cs" />

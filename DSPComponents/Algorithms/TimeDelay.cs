@@ -22,18 +22,10 @@ namespace DSPAlgorithms.Algorithms
             dircorr.InputSignal2 = InputSignal2;
             dircorr.Run();
 
-            float abs = float.MinValue;
-            int lag = 0;
-            for (int i = 0; i < dircorr.OutputNormalizedCorrelation.Count(); i++)
-            {
-                //Finding Absolute Value
-                if (Math.Abs(dircorr.OutputNormalizedCorrelation[i]) > abs)
-                {
-                    abs = Math.Abs(dircorr.OutputNormalizedCorrelation[i]);
-                    //Saving it's Lag(j)
-                    lag = i;
-                }
-            }
+            //Finding Absolute Value
+            float abs = dircorr.OutputNormalizedCorrelation.Max();
+            //Saving it's Lag(j)
+            int lag = dircorr.OutputNormalizedCorrelation.IndexOf(abs);
             //Time Delay = Ts * j
             OutputTimeDelay = InputSamplingPeriod * lag;
 
