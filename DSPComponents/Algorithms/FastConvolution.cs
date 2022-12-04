@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 using DSPAlgorithms.DataStructures;
@@ -18,7 +19,35 @@ namespace DSPAlgorithms.Algorithms
         /// </summary>
         public override void Run()
         {
-            throw new NotImplementedException();
+            int size = InputSignal1.Samples.Count + InputSignal2.Samples.Count - 1;
+
+            for (int i = InputSignal1.Samples.Count; i < size; i++)
+                InputSignal1.Samples.Add(0);
+
+            for (int i = InputSignal2.Samples.Count; i < size; i++)
+                InputSignal2.Samples.Add(0);
+
+            DiscreteFourierTransform d1 = new DiscreteFourierTransform();
+            d1.InputTimeDomainSignal = InputSignal1;
+            d1.Run();
+
+            DiscreteFourierTransform d2 = new DiscreteFourierTransform();
+            d2.InputTimeDomainSignal = InputSignal2;
+            d2.Run();
+
+            List<float> phaseshift = new List<float>();
+            for (int i = 0; i < d1.OutputFreqDomainSignal.FrequenciesPhaseShifts.Count; i++)
+                phaseshift.Add(d1.OutputFreqDomainSignal.FrequenciesPhaseShifts[i] + d2.OutputFreqDomainSignal.FrequenciesPhaseShifts[i]);
+
+            List<float> amps = new List<float>();
+            for (int i = 0; i < d2.OutputFreqDomainSignal.FrequenciesAmplitudes.Count; i++)
+                amps.Add(d1.OutputFreqDomainSignal.FrequenciesAmplitudes[i] * d2.OutputFreqDomainSignal.FrequenciesAmplitudes[i]);
+
+            InverseDiscreteFourierTransform idft = new InverseDiscreteFourierTransform();
+            idft.InputFreqDomainSignal = new DSPAlgorithms.DataStructures.Signal
+                (true, new List<float>(amps), amps, phaseshift);
+            idft.Run();
+            OutputConvolvedSignal = new Signal(idft.OutputTimeDomainSignal.Samples, false);
         }
     }
 }
