@@ -66,8 +66,10 @@
     <Compile Include="MovingAverageTestCases.cs" />
     <Compile Include="MultiplySignalByConstantTestCases.cs" />
     <Compile Include="NormalizerTestCases.cs" />
+    <Compile Include="PracticalTask2TestCases.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QuantizationAndEncodingTestCases.cs" />
+    <Compile Include="Sampling_Testcases.cs" />
     <Compile Include="ShiftingAndFoldingTestCases.cs" />
     <Compile Include="SinCosTestCases.cs" />
     <Compile Include="StudentTestCases.cs">
@@ -153,6 +155,7 @@
     <None Include="TestingSignals\FastAutoCorrelationNormalized_TestCase.ds">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="TestingSignals\FileDown.ds" />
     <None Include="TestingSignals\HPFCoefficients.ds">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -198,6 +201,8 @@
     <None Include="TestingSignals\Output_Shift_Plus500.ds">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="TestingSignals\Sampling_Down.ds" />
+    <None Include="TestingSignals\Sampling_Up.ds" />
     <None Include="TestingSignals\Signal1.ds">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

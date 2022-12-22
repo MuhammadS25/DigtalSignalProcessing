@@ -76,7 +76,9 @@
     <Compile Include="Algorithms\Normalizer.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Algorithms\PracticalTask2.cs" />
     <Compile Include="Algorithms\QuantizationAndEncoding.cs" />
+    <Compile Include="Algorithms\Sampling.cs" />
     <Compile Include="Algorithms\Shifter.cs" />
     <Compile Include="Algorithms\SinCos.cs" />
     <Compile Include="Algorithms\Subtractor.cs">
