@@ -97,346 +97,128 @@ namespace DSPAlgorithms.Algorithms
             OutputYn.SamplesIndices = new List<int>();
             OutputYn.Samples = new List<float>();
 
-            string testType = "";
+            int N = 0, range = 0;
+            if (InputStopBandAttenuation <= 21)
+            {
+                N = Ncoefficents(0.9f);
+                range = (N - 1) / 2;
+                for (int i = -range; i <= 0; ++i)
+                {
+                    OutputHn.Samples.Add(1.0f);
+                    OutputHn.SamplesIndices.Add(i);
+                }
+                //Mirorring
+                for (int i = 1; i <= range; ++i)
+                {
+                    OutputHn.Samples.Add(1.0f);
+                    OutputHn.SamplesIndices.Add(i);
+                }
+            }
+            else if (InputStopBandAttenuation <= 44)
+            {
+                N = Ncoefficents(3.1f);
+                range = (N - 1) / 2;
+                for (int i = -range; i <= 0; ++i)
+                {
+                    OutputHn.Samples.Add(hanning(i, N));
+                    OutputHn.SamplesIndices.Add(i);
+                }
+                //Mirorring
+                for (int i = 1; i <= range; ++i)
+                {
+                    OutputHn.Samples.Add(OutputHn.Samples[OutputHn.SamplesIndices.IndexOf(OutputHn.SamplesIndices[range - i])]);
+                    OutputHn.SamplesIndices.Add(i);
+                }
+            }
+            else if (InputStopBandAttenuation <= 53)
+            {
+                N = Ncoefficents(3.3f);
+                range = (N - 1) / 2;
+                for (int i = -range; i <= 0; ++i)
+                {
+                    OutputHn.Samples.Add(hamming(i, N));
+                    OutputHn.SamplesIndices.Add(i);
+                }
+                //Mirorring
+                for (int i = 1; i <= range; ++i)
+                {
+                    OutputHn.Samples.Add(OutputHn.Samples[OutputHn.SamplesIndices.IndexOf(OutputHn.SamplesIndices[range - i])]);
+                    OutputHn.SamplesIndices.Add(i);
+                }
+            }
+            else if (InputStopBandAttenuation <= 74)
+            {
+                N = Ncoefficents(5.5f);
+                range = (N - 1) / 2;
+                for (int i = -range; i <= 0; ++i)
+                {
+                    OutputHn.Samples.Add(blackman(i, N));
+                    OutputHn.SamplesIndices.Add(i);
+                }
+                //Mirorring
+                for (int i = 1; i <= range; ++i)
+                {
+                    OutputHn.Samples.Add(OutputHn.Samples[OutputHn.SamplesIndices.IndexOf(OutputHn.SamplesIndices[range - i])]);
+                    OutputHn.SamplesIndices.Add(i);
+                }
+            }
+
             if (InputFilterType == FILTER_TYPES.LOW)
             {
-                testType = "LowPass";
-                testType += ", ";
                 //Adjusting cutoff frequency
                 InputCutOffFrequency += InputTransitionBand / 2;
                 InputCutOffFrequency /= InputFS;
 
-                if (InputStopBandAttenuation <= 21)
-                {
-                    testType += "Rectangle";
-                    int N = Ncoefficents(0.9f);
-                    int range = (N - 1) / 2;
-                    for (int i = -range; i <= 0; ++i)
-                    {
-                        OutputHn.Samples.Add(lowpass(i, (float)InputCutOffFrequency));
-                        OutputHn.SamplesIndices.Add(i);
-                    }
-                    for (int i = 1; i <= range; ++i)
-                    {
-                        OutputHn.Samples.Add(OutputHn.Samples[OutputHn.SamplesIndices.IndexOf(OutputHn.SamplesIndices[range - i])]);
-                        OutputHn.SamplesIndices.Add(i);
-                    }
-                }
-                else if (InputStopBandAttenuation <= 44)
-                {
-                    testType += "Hanning";
-                    int N = Ncoefficents(3.1f);
-                    int range = (N - 1) / 2;
-                    float h, w;
-                    for (int i = -range; i <= 0; ++i)
-                    {
-                        h = lowpass(i, (float)InputCutOffFrequency);
-                        w = hanning(i, N);
-                        OutputHn.Samples.Add(h * w);
-                        OutputHn.SamplesIndices.Add(i);
-                    }
-                    for (int i = 1; i <= range; ++i)
-                    {
-                        OutputHn.Samples.Add(OutputHn.Samples[OutputHn.SamplesIndices.IndexOf(OutputHn.SamplesIndices[range - i])]);
-                        OutputHn.SamplesIndices.Add(i);
-                    }
-                }
-                else if (InputStopBandAttenuation <= 53)
-                {
-                    testType += "Hamming";
-                    int N = Ncoefficents(3.3f);
-                    int range = (N - 1) / 2;
-                    float h, w;
-                    for (int i = -range; i <= 0; ++i)
-                    {
-                        h = lowpass(i, (float)InputCutOffFrequency);
-                        w = hamming(i, N);
-                        OutputHn.Samples.Add(h * w);
-                        OutputHn.SamplesIndices.Add(i);
-                    }
-                    for (int i = 1; i <= range; ++i)
-                    {
-                        OutputHn.Samples.Add(OutputHn.Samples[OutputHn.SamplesIndices.IndexOf(OutputHn.SamplesIndices[range - i])]);
-                        OutputHn.SamplesIndices.Add(i);
-                    }
-                }
-                else if (InputStopBandAttenuation <= 74)
-                {
-                    testType += "Blackman";
-                    int N = Ncoefficents(5.5f);
-                    int range = (N - 1) / 2;
-                    float h, w;
-                    for (int i = -range; i <= 0; ++i)
-                    {
-                        h = lowpass(i, (float)InputCutOffFrequency);
-                        w = blackman(i, N);
-                        OutputHn.Samples.Add(h * w);
-                        OutputHn.SamplesIndices.Add(i);
-                    }
-                    for (int i = 1; i <= range; ++i)
-                    {
-                        OutputHn.Samples.Add(OutputHn.Samples[OutputHn.SamplesIndices.IndexOf(OutputHn.SamplesIndices[range - i])]);
-                        OutputHn.SamplesIndices.Add(i);
-                    }
-                }
+                for (int i = 0; i <= range; ++i)
+                    OutputHn.Samples[i] *= lowpass(i - range, (float)InputCutOffFrequency);
+
+                //Mirorring
+                for (int i = range + 1; i < N; ++i)
+                    OutputHn.Samples[i] = OutputHn.Samples[N - i - 1];
+
             }
             else if (InputFilterType == FILTER_TYPES.HIGH)
             {
-                testType = "HighPass";
-                testType += ", ";
                 //Adjusting cutoff frequency
                 InputCutOffFrequency -= InputTransitionBand / 2;
                 InputCutOffFrequency /= InputFS;
-                if (InputStopBandAttenuation <= 21)
-                {
-                    testType += "Rectangle";
-                    int N = Ncoefficents(0.9f);
-                    int range = (N - 1) / 2;
-                    for (int i = -range; i <= 0; ++i)
-                    {
-                        OutputHn.Samples.Add(highpass(i, (float)InputCutOffFrequency));
-                        OutputHn.SamplesIndices.Add(i);
-                    }
-                    for (int i = 1; i <= range; ++i)
-                    {
-                        OutputHn.Samples.Add(OutputHn.Samples[OutputHn.SamplesIndices.IndexOf(OutputHn.SamplesIndices[range - i])]);
-                        OutputHn.SamplesIndices.Add(i);
-                    }
-                }
-                else if (InputStopBandAttenuation <= 44)
-                {
-                    testType += "Hanning";
-                    int N = Ncoefficents(3.1f);
-                    int range = (N - 1) / 2;
-                    float h, w;
-                    for (int i = -range; i <= 0; ++i)
-                    {
-                        h = highpass(i, (float)InputCutOffFrequency);
-                        w = hanning(i, N);
-                        OutputHn.Samples.Add(h * w);
-                        OutputHn.SamplesIndices.Add(i);
-                    }
-                    for (int i = 1; i <= range; ++i)
-                    {
-                        OutputHn.Samples.Add(OutputHn.Samples[OutputHn.SamplesIndices.IndexOf(OutputHn.SamplesIndices[range - i])]);
-                        OutputHn.SamplesIndices.Add(i);
-                    }
-                }
-                else if (InputStopBandAttenuation <= 53)
-                {
-                    testType += "Hamming";
-                    int N = Ncoefficents(3.3f);
-                    int range = (N - 1) / 2;
-                    float h, w;
-                    for (int i = -range; i <= 0; ++i)
-                    {
-                        h = highpass(i, (float)InputCutOffFrequency);
-                        w = hamming(i, N);
-                        OutputHn.Samples.Add(h * w);
-                        OutputHn.SamplesIndices.Add(i);
-                    }
-                    for (int i = 1; i <= range; ++i)
-                    {
-                        OutputHn.Samples.Add(OutputHn.Samples[OutputHn.SamplesIndices.IndexOf(OutputHn.SamplesIndices[range - i])]);
-                        OutputHn.SamplesIndices.Add(i);
-                    }
-                }
-                else if (InputStopBandAttenuation <= 74)
-                {
-                    testType += "Blackman";
-                    int N = Ncoefficents(5.5f);
-                    int range = (N - 1) / 2;
-                    float h, w;
-                    for (int i = -range; i <= 0; ++i)
-                    {
-                        h = highpass(i, (float)InputCutOffFrequency);
-                        w = blackman(i, N);
-                        OutputHn.Samples.Add(h * w);
-                        OutputHn.SamplesIndices.Add(i);
-                    }
-                    for (int i = 1; i <= range; ++i)
-                    {
-                        OutputHn.Samples.Add(OutputHn.Samples[OutputHn.SamplesIndices.IndexOf(OutputHn.SamplesIndices[range - i])]);
-                        OutputHn.SamplesIndices.Add(i);
-                    }
-                }
+
+                for (int i = 0; i <= range; ++i)
+                    OutputHn.Samples[i] *= highpass(i - range, (float)InputCutOffFrequency);
+
+                //Mirorring
+                for (int i = range + 1; i < N; ++i)
+                    OutputHn.Samples[i] = OutputHn.Samples[N - i - 1];
+
             }
             else if (InputFilterType == FILTER_TYPES.BAND_PASS)
             {
-                testType = "Band Pass";
-                testType += ", ";
                 //Adjusting cutoff frequency
                 float fc1 = (float)((InputF1 - (InputTransitionBand / 2)) / InputFS);
                 float fc2 = (float)((InputF2 + (InputTransitionBand / 2)) / InputFS);
-                if (InputStopBandAttenuation <= 21)
-                {
-                    testType += "Rectangle";
-                    int N = Ncoefficents(0.9f);
-                    int range = (N - 1) / 2;
-                    for (int i = -range; i <= 0; ++i)
-                    {
-                        OutputHn.Samples.Add(bandpass(i, fc1, fc2));
-                        OutputHn.SamplesIndices.Add(i);
-                    }
-                    for (int i = 1; i <= range; ++i)
-                    {
-                        OutputHn.Samples.Add(OutputHn.Samples[OutputHn.SamplesIndices.IndexOf(OutputHn.SamplesIndices[range - i])]);
-                        OutputHn.SamplesIndices.Add(i);
-                    }
-                }
-                else if (InputStopBandAttenuation <= 44)
-                {
-                    testType += "Hanning";
-                    int N = Ncoefficents(3.1f);
-                    int range = (N - 1) / 2;
-                    float h, w;
-                    for (int i = -range; i <= 0; ++i)
-                    {
-                        h = bandpass(i, fc1, fc2);
-                        w = hanning(i, N);
-                        OutputHn.Samples.Add(h * w);
-                        OutputHn.SamplesIndices.Add(i);
-                    }
-                    for (int i = 1; i <= range; ++i)
-                    {
-                        OutputHn.Samples.Add(OutputHn.Samples[OutputHn.SamplesIndices.IndexOf(OutputHn.SamplesIndices[range - i])]);
-                        OutputHn.SamplesIndices.Add(i);
-                    }
-                }
-                else if (InputStopBandAttenuation <= 53)
-                {
-                    testType += "Hamming";
-                    int N = Ncoefficents(3.3f);
-                    int range = (N - 1) / 2;
-                    float h, w;
-                    for (int i = -range; i <= 0; ++i)
-                    {
-                        h = bandpass(i, fc1, fc2);
-                        w = hamming(i, N);
-                        OutputHn.Samples.Add(h * w);
-                        OutputHn.SamplesIndices.Add(i);
-                    }
-                    for (int i = 1; i <= range; ++i)
-                    {
-                        OutputHn.Samples.Add(OutputHn.Samples[OutputHn.SamplesIndices.IndexOf(OutputHn.SamplesIndices[range - i])]);
-                        OutputHn.SamplesIndices.Add(i);
-                    }
-                }
-                else if (InputStopBandAttenuation <= 74)
-                {
-                    testType += "Blackman";
-                    int N = Ncoefficents(5.5f);
-                    int range = (N - 1) / 2;
-                    float h, w;
-                    for (int i = -range; i <= 0; ++i)
-                    {
-                        h = bandpass(i, fc1, fc2);
-                        w = blackman(i, N);
-                        OutputHn.Samples.Add(h * w);
-                        OutputHn.SamplesIndices.Add(i);
-                    }
-                    for (int i = 1; i <= range; ++i)
-                    {
-                        OutputHn.Samples.Add(OutputHn.Samples[OutputHn.SamplesIndices.IndexOf(OutputHn.SamplesIndices[range - i])]);
-                        OutputHn.SamplesIndices.Add(i);
-                    }
-                }
+
+                for (int i = 0; i <= range; ++i)
+                    OutputHn.Samples[i] *= bandpass(i - range, fc1, fc2);
+
+                //Mirorring
+                for (int i = range + 1; i < N; ++i)
+                    OutputHn.Samples[i] = OutputHn.Samples[N - i - 1];
+
             }
             else
             {
-                testType = "Band Reject";
-                testType += ", ";
                 //Adjusting cutoff frequency
                 float fc1 = (float)((InputF1 + (InputTransitionBand / 2)) / InputFS);
                 float fc2 = (float)((InputF2 - (InputTransitionBand / 2)) / InputFS);
-                if (InputStopBandAttenuation <= 21)
-                {
-                    testType += "Rectangle";
-                    int N = Ncoefficents(0.9f);
-                    int range = (N - 1) / 2;
-                    for (int i = -range; i <= 0; ++i)
-                    {
-                        OutputHn.Samples.Add(bandreject(i, fc1, fc2));
-                        OutputHn.SamplesIndices.Add(i);
-                    }
-                    for (int i = 1; i <= range; ++i)
-                    {
-                        OutputHn.Samples.Add(OutputHn.Samples[OutputHn.SamplesIndices.IndexOf(OutputHn.SamplesIndices[range - i])]);
-                        OutputHn.SamplesIndices.Add(i);
-                    }
-                }
-                else if (InputStopBandAttenuation <= 44)
-                {
-                    testType += "Hanning";
-                    int N = Ncoefficents(3.1f);
-                    int range = (N - 1) / 2;
-                    float h, w;
-                    for (int i = -range; i <= 0; ++i)
-                    {
-                        h = bandreject(i, fc1, fc2);
-                        w = hanning(i, N);
-                        OutputHn.Samples.Add(h * w);
-                        OutputHn.SamplesIndices.Add(i);
-                    }
-                    for (int i = 1; i <= range; ++i)
-                    {
-                        OutputHn.Samples.Add(OutputHn.Samples[OutputHn.SamplesIndices.IndexOf(OutputHn.SamplesIndices[range - i])]);
-                        OutputHn.SamplesIndices.Add(i);
-                    }
-                }
-                else if (InputStopBandAttenuation <= 53)
-                {
-                    testType += "Hamming";
-                    int N = Ncoefficents(3.3f);
-                    int range = (N - 1) / 2;
-                    float h, w;
-                    for (int i = -range; i <= 0; ++i)
-                    {
-                        h = bandreject(i, fc1, fc2);
-                        w = hamming(i, N);
-                        OutputHn.Samples.Add(h * w);
-                        OutputHn.SamplesIndices.Add(i);
-                    }
-                    for (int i = 1; i <= range; ++i)
-                    {
-                        OutputHn.Samples.Add(OutputHn.Samples[OutputHn.SamplesIndices.IndexOf(OutputHn.SamplesIndices[range - i])]);
-                        OutputHn.SamplesIndices.Add(i);
-                    }
-                }
-                else if (InputStopBandAttenuation <= 74)
-                {
-                    testType += "Blackman";
-                    int N = Ncoefficents(5.5f);
-                    int range = (N - 1) / 2;
-                    float h, w;
-                    for (int i = -range; i <= 0; ++i)
-                    {
-                        h = bandreject(i, fc1, fc2);
-                        w = blackman(i, N);
-                        OutputHn.Samples.Add(h * w);
-                        OutputHn.SamplesIndices.Add(i);
-                    }
-                    for (int i = 1; i <= range; ++i)
-                    {
-                        OutputHn.Samples.Add(OutputHn.Samples[OutputHn.SamplesIndices.IndexOf(OutputHn.SamplesIndices[range - i])]);
-                        OutputHn.SamplesIndices.Add(i);
-                    }
-                }
-            }
-            //Writer
-            using (StreamWriter writer = new StreamWriter("C:/Users/MoSabry25/source/repos/DSPToolbox/Coefficients.txt", append: true))
-            {
-                writer.AutoFlush = false;
-                writer.WriteLine(testType);
-                for (int i = 0; i < OutputHn.Samples.Count; ++i)
-                {
-                    string s = OutputHn.SamplesIndices[i].ToString();
-                    s += ", ";
-                    s += OutputHn.Samples[i].ToString();
-                    writer.WriteLine(s);
-                }
-            }
 
+                for (int i = 0; i <= range; ++i)
+                    OutputHn.Samples[i] *= bandreject(i - range, fc1, fc2);
+
+                //Mirorring
+                for (int i = range + 1; i < N; ++i)
+                    OutputHn.Samples[i] = OutputHn.Samples[N - i - 1];
+
+            }
             DirectConvolution dc = new DirectConvolution();
             dc.InputSignal1 = InputTimeDomainSignal;
             dc.InputSignal2 = OutputHn;
