@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -96,14 +97,18 @@ namespace DSPAlgorithms.Algorithms
             OutputYn.SamplesIndices = new List<int>();
             OutputYn.Samples = new List<float>();
 
+            string testType = "";
             if (InputFilterType == FILTER_TYPES.LOW)
             {
+                testType = "LowPass";
+                testType += ", ";
                 //Adjusting cutoff frequency
                 InputCutOffFrequency += InputTransitionBand / 2;
                 InputCutOffFrequency /= InputFS;
 
                 if (InputStopBandAttenuation <= 21)
                 {
+                    testType += "Rectangle";
                     int N = Ncoefficents(0.9f);
                     int range = (N - 1) / 2;
                     for (int i = -range; i <= 0; ++i)
@@ -119,6 +124,7 @@ namespace DSPAlgorithms.Algorithms
                 }
                 else if (InputStopBandAttenuation <= 44)
                 {
+                    testType += "Hanning";
                     int N = Ncoefficents(3.1f);
                     int range = (N - 1) / 2;
                     float h, w;
@@ -137,6 +143,7 @@ namespace DSPAlgorithms.Algorithms
                 }
                 else if (InputStopBandAttenuation <= 53)
                 {
+                    testType += "Hamming";
                     int N = Ncoefficents(3.3f);
                     int range = (N - 1) / 2;
                     float h, w;
@@ -155,6 +162,7 @@ namespace DSPAlgorithms.Algorithms
                 }
                 else if (InputStopBandAttenuation <= 74)
                 {
+                    testType += "Blackman";
                     int N = Ncoefficents(5.5f);
                     int range = (N - 1) / 2;
                     float h, w;
@@ -174,11 +182,14 @@ namespace DSPAlgorithms.Algorithms
             }
             else if (InputFilterType == FILTER_TYPES.HIGH)
             {
+                testType = "HighPass";
+                testType += ", ";
                 //Adjusting cutoff frequency
                 InputCutOffFrequency -= InputTransitionBand / 2;
                 InputCutOffFrequency /= InputFS;
                 if (InputStopBandAttenuation <= 21)
                 {
+                    testType += "Rectangle";
                     int N = Ncoefficents(0.9f);
                     int range = (N - 1) / 2;
                     for (int i = -range; i <= 0; ++i)
@@ -194,6 +205,7 @@ namespace DSPAlgorithms.Algorithms
                 }
                 else if (InputStopBandAttenuation <= 44)
                 {
+                    testType += "Hanning";
                     int N = Ncoefficents(3.1f);
                     int range = (N - 1) / 2;
                     float h, w;
@@ -212,6 +224,7 @@ namespace DSPAlgorithms.Algorithms
                 }
                 else if (InputStopBandAttenuation <= 53)
                 {
+                    testType += "Hamming";
                     int N = Ncoefficents(3.3f);
                     int range = (N - 1) / 2;
                     float h, w;
@@ -230,6 +243,7 @@ namespace DSPAlgorithms.Algorithms
                 }
                 else if (InputStopBandAttenuation <= 74)
                 {
+                    testType += "Blackman";
                     int N = Ncoefficents(5.5f);
                     int range = (N - 1) / 2;
                     float h, w;
@@ -249,11 +263,14 @@ namespace DSPAlgorithms.Algorithms
             }
             else if (InputFilterType == FILTER_TYPES.BAND_PASS)
             {
+                testType = "Band Pass";
+                testType += ", ";
                 //Adjusting cutoff frequency
                 float fc1 = (float)((InputF1 - (InputTransitionBand / 2)) / InputFS);
                 float fc2 = (float)((InputF2 + (InputTransitionBand / 2)) / InputFS);
                 if (InputStopBandAttenuation <= 21)
                 {
+                    testType += "Rectangle";
                     int N = Ncoefficents(0.9f);
                     int range = (N - 1) / 2;
                     for (int i = -range; i <= 0; ++i)
@@ -269,6 +286,7 @@ namespace DSPAlgorithms.Algorithms
                 }
                 else if (InputStopBandAttenuation <= 44)
                 {
+                    testType += "Hanning";
                     int N = Ncoefficents(3.1f);
                     int range = (N - 1) / 2;
                     float h, w;
@@ -287,6 +305,7 @@ namespace DSPAlgorithms.Algorithms
                 }
                 else if (InputStopBandAttenuation <= 53)
                 {
+                    testType += "Hamming";
                     int N = Ncoefficents(3.3f);
                     int range = (N - 1) / 2;
                     float h, w;
@@ -305,6 +324,7 @@ namespace DSPAlgorithms.Algorithms
                 }
                 else if (InputStopBandAttenuation <= 74)
                 {
+                    testType += "Blackman";
                     int N = Ncoefficents(5.5f);
                     int range = (N - 1) / 2;
                     float h, w;
@@ -324,11 +344,14 @@ namespace DSPAlgorithms.Algorithms
             }
             else
             {
+                testType = "Band Reject";
+                testType += ", ";
                 //Adjusting cutoff frequency
                 float fc1 = (float)((InputF1 + (InputTransitionBand / 2)) / InputFS);
                 float fc2 = (float)((InputF2 - (InputTransitionBand / 2)) / InputFS);
                 if (InputStopBandAttenuation <= 21)
                 {
+                    testType += "Rectangle";
                     int N = Ncoefficents(0.9f);
                     int range = (N - 1) / 2;
                     for (int i = -range; i <= 0; ++i)
@@ -344,6 +367,7 @@ namespace DSPAlgorithms.Algorithms
                 }
                 else if (InputStopBandAttenuation <= 44)
                 {
+                    testType += "Hanning";
                     int N = Ncoefficents(3.1f);
                     int range = (N - 1) / 2;
                     float h, w;
@@ -362,6 +386,7 @@ namespace DSPAlgorithms.Algorithms
                 }
                 else if (InputStopBandAttenuation <= 53)
                 {
+                    testType += "Hamming";
                     int N = Ncoefficents(3.3f);
                     int range = (N - 1) / 2;
                     float h, w;
@@ -380,6 +405,7 @@ namespace DSPAlgorithms.Algorithms
                 }
                 else if (InputStopBandAttenuation <= 74)
                 {
+                    testType += "Blackman";
                     int N = Ncoefficents(5.5f);
                     int range = (N - 1) / 2;
                     float h, w;
@@ -397,6 +423,20 @@ namespace DSPAlgorithms.Algorithms
                     }
                 }
             }
+            //Writer
+            using (StreamWriter writer = new StreamWriter("C:/Users/MoSabry25/source/repos/DSPToolbox/Coefficients.txt", append: true))
+            {
+                writer.AutoFlush = false;
+                writer.WriteLine(testType);
+                for (int i = 0; i < OutputHn.Samples.Count; ++i)
+                {
+                    string s = OutputHn.SamplesIndices[i].ToString();
+                    s += ", ";
+                    s += OutputHn.Samples[i].ToString();
+                    writer.WriteLine(s);
+                }
+            }
+
             DirectConvolution dc = new DirectConvolution();
             dc.InputSignal1 = InputTimeDomainSignal;
             dc.InputSignal2 = OutputHn;
