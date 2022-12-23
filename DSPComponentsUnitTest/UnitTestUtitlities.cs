@@ -194,5 +194,23 @@ namespace DSPComponentsUnitTest
             streamSaver.Flush();
             streamSaver.Close();
         }
+        public static void SaveSignalFrequencyDomain(Signal sig, string filePath)
+        {
+            StreamWriter streamSaver = new StreamWriter(filePath);
+
+            streamSaver.WriteLine(1); // Frequency Domain
+            streamSaver.WriteLine(0); // Non Periodic
+            streamSaver.WriteLine(sig.Frequencies.Count);
+
+            for (int i = 0; i < sig.Frequencies.Count; i++)
+            {
+                streamSaver.Write(sig.Frequencies[i]);
+                streamSaver.Write(" " + sig.FrequenciesAmplitudes[i]);
+                streamSaver.WriteLine(" " + sig.FrequenciesPhaseShifts[i]);
+            }
+
+            streamSaver.Flush();
+            streamSaver.Close();
+        }
     }
 }
