@@ -1,4 +1,4 @@
-﻿﻿using DSPAlgorithms.DataStructures;
+﻿using DSPAlgorithms.DataStructures;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,11 +20,90 @@ namespace DSPAlgorithms.Algorithms
 
         public override void Run()
         {
+            OutputFreqDomainSignal = new Signal(new List<float>(), false);
             Signal InputSignal = LoadSignal(SignalPath);
-
-            throw new NotImplementedException();
+            //Signals Folder
+            String path = "C:/Users/MoSabry25/source/repos/DSPToolbox/Saved Signals/";
+            //FIR
+            FIR fir = new FIR();
+            fir.InputTimeDomainSignal = InputSignal;
+            fir.InputFilterType = FILTER_TYPES.BAND_PASS;
+            fir.InputF1 = miniF;
+            fir.InputF2 = maxF;
+            fir.InputFS = Fs;
+            fir.InputStopBandAttenuation = 50;
+            fir.InputTransitionBand = 500;
+            fir.Run();
+            SaveSignalTimeDomain(fir.OutputYn, path + "fir.ds");
+            /*---------------------------------------------------------*/
+            Sampling sampling = new Sampling();
+            sampling.OutputSignal = new Signal(new List<float>(), false);
+            sampling.OutputSignal.Samples = new List<float>();
+            if (newFs >= 2 * maxF)
+            {
+                sampling.InputSignal = fir.OutputYn;
+                sampling.L = L;
+                sampling.M = M;
+                sampling.Run();
+                SaveSignalTimeDomain(sampling.OutputSignal, path + "SampledSignal.ds");
+            }
+            /*---------------------------------------------------------*/
+            DC_Component dc = new DC_Component();
+            dc.InputSignal = sampling.OutputSignal.Samples.Count == 0 ? fir.OutputYn : sampling.OutputSignal;
+            dc.Run();
+            SaveSignalTimeDomain(dc.OutputSignal, path + "DCRemoved.ds");
+            /*--------------------------------------------------------*/
+            Normalizer normalizer = new Normalizer();
+            normalizer.InputSignal = dc.OutputSignal;
+            normalizer.InputMinRange = -1;
+            normalizer.InputMaxRange = 1;
+            normalizer.Run();
+            SaveSignalTimeDomain(normalizer.OutputNormalizedSignal, path + "NormalizedSignal.ds");
+            /*--------------------------------------------------------*/
+            DiscreteFourierTransform dft = new DiscreteFourierTransform();
+            dft.InputTimeDomainSignal = normalizer.OutputNormalizedSignal;
+            dft.InputSamplingFrequency = Fs;
+            dft.Run();
+            OutputFreqDomainSignal = dft.OutputFreqDomainSignal;
+            SaveSignalFrequencyDomain(OutputFreqDomainSignal, path + "FreqDomainSignal.ds");
         }
 
+        public static void SaveSignalTimeDomain(Signal sig, string filePath)
+        {
+            StreamWriter streamSaver = new StreamWriter(filePath);
+
+            streamSaver.WriteLine(0); // Time Domain
+            streamSaver.WriteLine(0); // Non Periodic
+            streamSaver.WriteLine(sig.Samples.Count);
+
+            for (int i = 0; i < sig.SamplesIndices.Count; i++)
+            {
+                streamSaver.Write(sig.SamplesIndices[i]);
+                streamSaver.WriteLine(" " + sig.Samples[i]);
+            }
+
+            streamSaver.Flush();
+            streamSaver.Close();
+        }
+
+        public static void SaveSignalFrequencyDomain(Signal sig, string filePath)
+        {
+            StreamWriter streamSaver = new StreamWriter(filePath);
+
+            streamSaver.WriteLine(1); // Frequency Domain
+            streamSaver.WriteLine(0); // Non Periodic
+            streamSaver.WriteLine(sig.Frequencies.Count);
+
+            for (int i = 0; i < sig.Frequencies.Count; i++)
+            {
+                streamSaver.Write(sig.Frequencies[i]);
+                streamSaver.Write(" " + sig.FrequenciesAmplitudes[i]);
+                streamSaver.WriteLine(" " + sig.FrequenciesPhaseShifts[i]);
+            }
+
+            streamSaver.Flush();
+            streamSaver.Close();
+        }
         public Signal LoadSignal(string filePath)
         {
             Stream stream = File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
