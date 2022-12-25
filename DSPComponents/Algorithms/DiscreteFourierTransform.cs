@@ -34,6 +34,7 @@ namespace DSPAlgorithms.Algorithms
             OutputFreqDomainSignal = new Signal(new List<float>(), false);
             OutputFreqDomainSignal.FrequenciesAmplitudes = new List<float>();
             OutputFreqDomainSignal.FrequenciesPhaseShifts = new List<float>();
+            OutputFreqDomainSignal.Frequencies = new List<float>();
             List<Complex> S = new List<Complex>();
 
             for (int i = 0; i < InputTimeDomainSignal.Samples.Count; i++)
@@ -49,6 +50,11 @@ namespace DSPAlgorithms.Algorithms
                 OutputFreqDomainSignal.FrequenciesPhaseShifts.Add
                     ((float)(Math.Atan2(harmonics[i].Imaginary, harmonics[i].Real)));
             }
+            //Computing X-axis
+            for (int i = 1; i <= InputTimeDomainSignal.Samples.Count; ++i)
+                OutputFreqDomainSignal.Frequencies.Add
+                    ((float)Math.Round(
+                    (2 * Math.PI * InputSamplingFrequency * i / InputTimeDomainSignal.Samples.Count), 1));
 
         }
     }
