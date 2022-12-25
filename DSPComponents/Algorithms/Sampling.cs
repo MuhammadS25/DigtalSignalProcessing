@@ -69,11 +69,13 @@ namespace DSPAlgorithms.Algorithms
                 OutputSignal = upSampling(InputSignal);
                 OutputSignal = filtering(OutputSignal);
             }
+            //DOWNSAMPLING
             else if (M != 0 && L == 0)
             {
                 OutputSignal = filtering(InputSignal);
                 OutputSignal = downSampling(OutputSignal);
             }
+            //RATIOSAMPLING
             else
             {
                 OutputSignal = upSampling(InputSignal);
