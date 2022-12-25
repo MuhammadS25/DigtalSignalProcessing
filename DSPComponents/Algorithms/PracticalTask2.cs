@@ -24,6 +24,9 @@ namespace DSPAlgorithms.Algorithms
             Signal InputSignal = LoadSignal(SignalPath);
             //Signals Folder
             String path = "C:/Users/MoSabry25/source/repos/DSPToolbox/Saved Signals/";
+
+            /*---------------------------------------------------------*/
+
             //FIR
             FIR fir = new FIR();
             fir.InputTimeDomainSignal = InputSignal;
@@ -35,7 +38,10 @@ namespace DSPAlgorithms.Algorithms
             fir.InputTransitionBand = 500;
             fir.Run();
             SaveSignalTimeDomain(fir.OutputYn, path + "fir.ds");
+
             /*---------------------------------------------------------*/
+
+            //Sampling
             Sampling sampling = new Sampling();
             sampling.OutputSignal = new Signal(new List<float>(), false);
             sampling.OutputSignal.Samples = new List<float>();
@@ -47,19 +53,28 @@ namespace DSPAlgorithms.Algorithms
                 sampling.Run();
                 SaveSignalTimeDomain(sampling.OutputSignal, path + "SampledSignal.ds");
             }
+
             /*---------------------------------------------------------*/
+
+            //Removing DC Component
             DC_Component dc = new DC_Component();
             dc.InputSignal = sampling.OutputSignal.Samples.Count == 0 ? fir.OutputYn : sampling.OutputSignal;
             dc.Run();
             SaveSignalTimeDomain(dc.OutputSignal, path + "DCRemoved.ds");
+
             /*--------------------------------------------------------*/
+
+            //Normalization -1 to 1
             Normalizer normalizer = new Normalizer();
             normalizer.InputSignal = dc.OutputSignal;
             normalizer.InputMinRange = -1;
             normalizer.InputMaxRange = 1;
             normalizer.Run();
             SaveSignalTimeDomain(normalizer.OutputNormalizedSignal, path + "NormalizedSignal.ds");
+
             /*--------------------------------------------------------*/
+
+            //DFT
             DiscreteFourierTransform dft = new DiscreteFourierTransform();
             dft.InputTimeDomainSignal = normalizer.OutputNormalizedSignal;
             dft.InputSamplingFrequency = Fs;
@@ -67,7 +82,7 @@ namespace DSPAlgorithms.Algorithms
             OutputFreqDomainSignal = dft.OutputFreqDomainSignal;
             SaveSignalFrequencyDomain(OutputFreqDomainSignal, path + "FreqDomainSignal.ds");
         }
-
+        //Saving Signals from test Utilities
         public static void SaveSignalTimeDomain(Signal sig, string filePath)
         {
             StreamWriter streamSaver = new StreamWriter(filePath);
