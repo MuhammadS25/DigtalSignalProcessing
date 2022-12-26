@@ -224,8 +224,6 @@ namespace DSPAlgorithms.Algorithms
             dc.InputSignal2 = OutputHn;
             dc.Run();
             OutputYn = dc.OutputConvolvedSignal;
-            //removing zeros
-            OutputYn.Samples.Remove(0);
         }
     }
 }
