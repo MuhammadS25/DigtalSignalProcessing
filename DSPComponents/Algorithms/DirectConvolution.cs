@@ -40,6 +40,13 @@ namespace DSPAlgorithms.Algorithms
                 OutputConvolvedSignal.SamplesIndices.Add(i);
                 OutputConvolvedSignal.Samples.Add(res);
             }
+
+            //Removing Zeros
+            int index = OutputConvolvedSignal.Samples.Count - 1;
+            while (OutputConvolvedSignal.Samples[index] == 0) --index;
+
+            OutputConvolvedSignal.Samples.RemoveRange(index + 1, OutputConvolvedSignal.Samples.Count - (index + 1));
+            OutputConvolvedSignal.SamplesIndices.RemoveRange(index + 1, OutputConvolvedSignal.SamplesIndices.Count - (index + 1));
         }
 
     }
