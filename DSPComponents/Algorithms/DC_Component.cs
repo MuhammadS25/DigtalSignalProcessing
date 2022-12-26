@@ -22,6 +22,7 @@ namespace DSPAlgorithms.Algorithms
             for (int i = 0; i < InputSignal.Samples.Count; i++)
             {
                 OutputSignal.Samples.Add(InputSignal.Samples[i] - tot);
+                OutputSignal.SamplesIndices.Add(i);
             }
         }
     }
