@@ -37,7 +37,7 @@ namespace DSPAlgorithms.Algorithms
             fir.InputStopBandAttenuation = 50;
             fir.InputTransitionBand = 500;
             fir.Run();
-            SaveSignalTimeDomain(fir.OutputYn, path + "fir.ds");
+            saveSignal(fir.OutputYn, path + "fir.ds");
 
             /*---------------------------------------------------------*/
 
@@ -51,7 +51,7 @@ namespace DSPAlgorithms.Algorithms
                 sampling.L = L;
                 sampling.M = M;
                 sampling.Run();
-                SaveSignalTimeDomain(sampling.OutputSignal, path + "SampledSignal.ds");
+                saveSignal(sampling.OutputSignal, path + "SampledSignal.ds");
             }
 
             /*---------------------------------------------------------*/
@@ -60,7 +60,7 @@ namespace DSPAlgorithms.Algorithms
             DC_Component dc = new DC_Component();
             dc.InputSignal = sampling.OutputSignal.Samples.Count == 0 ? fir.OutputYn : sampling.OutputSignal;
             dc.Run();
-            SaveSignalTimeDomain(dc.OutputSignal, path + "DCRemoved.ds");
+            saveSignal(dc.OutputSignal, path + "DCRemoved.ds");
 
             /*--------------------------------------------------------*/
 
@@ -70,7 +70,7 @@ namespace DSPAlgorithms.Algorithms
             normalizer.InputMinRange = -1;
             normalizer.InputMaxRange = 1;
             normalizer.Run();
-            SaveSignalTimeDomain(normalizer.OutputNormalizedSignal, path + "NormalizedSignal.ds");
+            saveSignal(normalizer.OutputNormalizedSignal, path + "NormalizedSignal.ds");
 
             /*--------------------------------------------------------*/
 
@@ -80,44 +80,50 @@ namespace DSPAlgorithms.Algorithms
             dft.InputSamplingFrequency = Fs;
             dft.Run();
             OutputFreqDomainSignal = dft.OutputFreqDomainSignal;
-            SaveSignalFrequencyDomain(OutputFreqDomainSignal, path + "FreqDomainSignal.ds");
+            saveSignal(OutputFreqDomainSignal, path + "FreqDomainSignal.ds");
         }
         //Saving Signals from test Utilities
-        public static void SaveSignalTimeDomain(Signal sig, string filePath)
+        public void saveSignal(Signal signal, String SignalPath)
         {
-            StreamWriter streamSaver = new StreamWriter(filePath);
-
-            streamSaver.WriteLine(0); // Time Domain
-            streamSaver.WriteLine(0); // Non Periodic
-            streamSaver.WriteLine(sig.Samples.Count);
-
-            for (int i = 0; i < sig.SamplesIndices.Count; i++)
+            using (StreamWriter writer = File.CreateText(SignalPath))
             {
-                streamSaver.Write(sig.SamplesIndices[i]);
-                streamSaver.WriteLine(" " + sig.Samples[i]);
+                if (signal.Frequencies == null || signal.Frequencies.Count == 0)
+                    writer.WriteLine(0);
+                else
+                    writer.WriteLine(1);
+                if (signal.Periodic == false)
+                    writer.WriteLine(0);
+                else
+                    writer.WriteLine(1);
+                if (signal.Frequencies == null || signal.Frequencies.Count == 0)
+                {
+                    writer.WriteLine(signal.Samples.Count);
+                }
+                else writer.WriteLine(signal.Frequencies.Count);
+                if (signal.Frequencies == null || signal.Frequencies.Count == 0)
+                {
+                    for (int i = 0; i < signal.Samples.Count; i++)
+                    {
+                        writer.Write(signal.SamplesIndices[i]);
+                        writer.Write(" ");
+                        writer.WriteLine(signal.Samples[i]);
+                    }
+                }
+                else
+                {
+                    for (int i = 0; i < signal.Frequencies.Count; i++)
+                    {
+                        writer.Write(signal.Frequencies[i]);
+                        writer.Write(" ");
+                        writer.Write(signal.FrequenciesAmplitudes[i]);
+                        writer.Write(" ");
+                        writer.WriteLine(signal.FrequenciesPhaseShifts[i]);
+                    }
+                }
+
+                writer.Flush();
+                writer.Close();
             }
-
-            streamSaver.Flush();
-            streamSaver.Close();
-        }
-
-        public static void SaveSignalFrequencyDomain(Signal sig, string filePath)
-        {
-            StreamWriter streamSaver = new StreamWriter(filePath);
-
-            streamSaver.WriteLine(1); // Frequency Domain
-            streamSaver.WriteLine(0); // Non Periodic
-            streamSaver.WriteLine(sig.Frequencies.Count);
-
-            for (int i = 0; i < sig.Frequencies.Count; i++)
-            {
-                streamSaver.Write(sig.Frequencies[i]);
-                streamSaver.Write(" " + sig.FrequenciesAmplitudes[i]);
-                streamSaver.WriteLine(" " + sig.FrequenciesPhaseShifts[i]);
-            }
-
-            streamSaver.Flush();
-            streamSaver.Close();
         }
         public Signal LoadSignal(string filePath)
         {
