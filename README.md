@@ -7,7 +7,7 @@
 ---
 ## Algorithms
 
-1. ### Simple Signal Processing Tasks
+ 1. ### Simple Signal Processing Tasks
 * [**Adder**](https://github.com/MuhammadS25/DigtalSignalProcessing/blob/main/DSPComponents/Algorithms/Adder.cs)
 
 >Featuring the ability to add two signals.
@@ -58,45 +58,45 @@
 ---
 ---
 
-2. ### [**Discrete Fourier transform**](https://github.com/MuhammadS25/DigtalSignalProcessing/blob/main/DSPComponents/Algorithms/DiscreteFourierTransform.cs)
+ 2. ### [**Discrete Fourier transform**](https://github.com/MuhammadS25/DigtalSignalProcessing/blob/main/DSPComponents/Algorithms/DiscreteFourierTransform.cs)
 
 >Featuring the ability to translate the signal from time domain to frequency domain through applying Fourier transform.
 
-3. ### [**Inverse Discrete Fourier Transform**](https://github.com/MuhammadS25/DigtalSignalProcessing/blob/main/DSPComponents/Algorithms/InverseDiscreteFourierTransform.cs)
+ 3. ### [**Inverse Discrete Fourier Transform**](https://github.com/MuhammadS25/DigtalSignalProcessing/blob/main/DSPComponents/Algorithms/InverseDiscreteFourierTransform.cs)
 
 >Featuring the ability to translate the signal from frequency domain to time domain through applying inverse Fourier transform.
 
 * **Note**: due to the similarity between DFT and IDFT Computed harmonics are the same steps which exists as a function in DFT file.
 
-4. ### [**Quantization**](https://github.com/MuhammadS25/DigtalSignalProcessing/blob/main/DSPComponents/Algorithms/QuantizationAndEncoding.cs)
+ 4. ### [**Quantization**](https://github.com/MuhammadS25/DigtalSignalProcessing/blob/main/DSPComponents/Algorithms/QuantizationAndEncoding.cs)
 
 >Featuring The ability to quantize the samples of a signal.
 
-5. ### [**Time Delay**](https://github.com/MuhammadS25/DigtalSignalProcessing/blob/main/DSPComponents/Algorithms/TimeDelay.cs)
+ 5. ### [**Time Delay**](https://github.com/MuhammadS25/DigtalSignalProcessing/blob/main/DSPComponents/Algorithms/TimeDelay.cs)
 
 >Featuring The ability to Delay or advance a signal.
 
-6. ### Convolution
+ 6. ### Convolution
 
 * [**Fast Convolution**](https://github.com/MuhammadS25/DigtalSignalProcessing/blob/main/DSPComponents/Algorithms/FastConvolution.cs) and [**Direct Convolution**](https://github.com/MuhammadS25/DigtalSignalProcessing/blob/main/DSPComponents/Algorithms/DirectConvolution.cs).
 
 >Featuring The ability to convolve two signals.
 
-7. ### Correlation
+ 7. ### Correlation
 
 * [**Fast Correlation**](https://github.com/MuhammadS25/DigtalSignalProcessing/blob/main/DSPComponents/Algorithms/FastCorrelation.cs) and [**Direct Correlation**](https://github.com/MuhammadS25/DigtalSignalProcessing/blob/main/DSPComponents/Algorithms/DirectCorrelation.cs).
 
 >Featuring The ability to perform auto and cross Correlation.
 
-8. ### [**Filtering**](https://github.com/MuhammadS25/DigtalSignalProcessing/blob/main/DSPComponents/Algorithms/FIR.cs)
+ 8. ### [**Filtering**](https://github.com/MuhammadS25/DigtalSignalProcessing/blob/main/DSPComponents/Algorithms/FIR.cs)
 
 >Featuring The ability to apply linear phase filter (FIR) for a given signal.
 
-9. ### [**Multi rate Signal Processing**](https://github.com/MuhammadS25/DigtalSignalProcessing/blob/main/DSPComponents/Algorithms/Sampling.cs)
+ 9. ### [**Multi rate Signal Processing**](https://github.com/MuhammadS25/DigtalSignalProcessing/blob/main/DSPComponents/Algorithms/Sampling.cs)
 
 >Featuring The ability to apply upSampling and downSampling for a given signal.
 
-10. ### [**Saving**](https://github.com/MuhammadS25/DigtalSignalProcessing/blob/main/DSPComponents/Algorithms/PracticalTask2.cs)
+ 10. ### [**Saving**](https://github.com/MuhammadS25/DigtalSignalProcessing/blob/main/DSPComponents/Algorithms/PracticalTask2.cs)
 
 >Featuring The ability to save a signal to have the ability to plot it.
 
