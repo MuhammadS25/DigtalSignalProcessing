@@ -40,7 +40,7 @@
 
 >Featuring the ability to Accumulate the signal.
 
-* [**Accumulation Sum**](https://github.com/MuhammadS25/DigtalSignalProcessing/blob/main/DSPComponents/Algorithms/Derivatives.cs)
+* [**Derivatives**](https://github.com/MuhammadS25/DigtalSignalProcessing/blob/main/DSPComponents/Algorithms/Derivatives.cs)
 
 >Sharpening the signal through first and second derivative.
 
@@ -117,7 +117,7 @@
 
 ![GUI](readmeSnaps/loadSignal.png)
 
-* Through **Load** we can load or plot saved signals.
+* Through **Load** by clicking twice, we can load or plot saved signals.
 
 ![Adding Signal](readmeSnaps/addSignal.png)
 
