@@ -104,7 +104,7 @@
 ---
 ### [**Testing Unit**](https://github.com/MuhammadS25/DigtalSignalProcessing/tree/main/DSPComponentsUnitTest)
 
-* Displaying The Result of testing the algorithmis
+* Displaying The Result of testing the algorithms
 
 ![Tests](readmeSnaps/Test.png)
 ![Result](readmeSnaps/testResult.png)
