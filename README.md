@@ -30,7 +30,7 @@
 
 * [**Moving Average**](https://github.com/MuhammadS25/DigtalSignalProcessing/blob/main/DSPComponents/Algorithms/MovingAverage.cs)
 
->Featuring the ability to move the mean of the signal.
+>Featuring the ability to move the mean of the signal to remove noise.
 
 * [**DC Component**](https://github.com/MuhammadS25/DigtalSignalProcessing/blob/main/DSPComponents/Algorithms/DC_Component.cs)
 
