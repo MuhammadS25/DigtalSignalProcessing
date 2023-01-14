@@ -86,7 +86,7 @@
 
 * [**Fast Correlation**](https://github.com/MuhammadS25/DigtalSignalProcessing/blob/main/DSPComponents/Algorithms/FastCorrelation.cs) and [**Direct Correlation**](https://github.com/MuhammadS25/DigtalSignalProcessing/blob/main/DSPComponents/Algorithms/DirectCorrelation.cs).
 
->Featuring The ability to perform auto and cross Correlation.
+>Featuring The ability to perform auto Correlation to detect repeats and identify the Signal from Noise and cross Correlation.
 
 8. ### [**Filtering**](https://github.com/MuhammadS25/DigtalSignalProcessing/blob/main/DSPComponents/Algorithms/FIR.cs)
 
